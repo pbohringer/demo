@@ -1,0 +1,72 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    field.cattle.io/creatorId: user-v9nvw
+    field.cattle.io/displayName: ng-scaler
+  creationTimestamp: null
+  generateName: hpa-
+  labels:
+    cattle.io/creator: norman
+  managedFields:
+  - apiVersion: autoscaling/v2beta2
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:field.cattle.io/creatorId: {}
+          f:field.cattle.io/displayName: {}
+        f:generateName: {}
+        f:labels:
+          .: {}
+          f:cattle.io/creator: {}
+      f:spec:
+        f:maxReplicas: {}
+        f:metrics: {}
+        f:minReplicas: {}
+        f:scaleTargetRef:
+          f:apiVersion: {}
+          f:kind: {}
+          f:name: {}
+      f:status:
+        f:currentMetrics: {}
+    manager: rancher
+    operation: Update
+    time: "2021-04-15T01:06:39Z"
+  - apiVersion: autoscaling/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:autoscaling.alpha.kubernetes.io/conditions: {}
+      f:status:
+        f:currentReplicas: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2021-04-15T01:07:09Z"
+spec:
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: memory
+      target:
+        averageUtilization: 50
+        type: Utilization
+    type: Resource
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 20
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1beta2
+    kind: Deployment
+    name: ng-deploy
+status:
+  conditions: null
+  currentMetrics: null
+  currentReplicas: 0
+  desiredReplicas: 0

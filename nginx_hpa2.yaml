@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+  name: nginx-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: nginx
+        resources:
+          limits:
+            cpu: "50m"
+            memory: "200Mi"
+          requests:
+            cpu: "50m"
+            memory: "200Mi"
+
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ng-scale
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: memory
+      target:
+        averageUtilization: 50
+        type: Utilization
+    type: Resource
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 20
+        type: Utilization
+    type: Resource
+  scaleTargetRef:
+    apiVersion: apps/v1beta2
+    kind: Deployment
+    name: nginx-deploy
+
